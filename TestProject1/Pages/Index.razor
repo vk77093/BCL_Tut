@@ -1,0 +1,28 @@
+﻿@page "/"
+@using Blazored.Typeahead
+<PageTitle>Auto Complete</PageTitle>
+<BlazoredTypeahead SearchMethod="@SearchData" @bind-Value="@employee" Debounce="500">
+    <SelectedTemplate>@context.NameWithCountrry</SelectedTemplate>
+    <ResultTemplate>@context.NameWithCountrry</ResultTemplate>
+</BlazoredTypeahead>
+@if(employee != null)
+{
+    <p>Selected Employee  :@employee.Name</p>
+}
+@code{
+    [Inject]
+    IEmployeeRepo employeeRepo { get; set; }
+    List<Employee> employeesList = new List<Employee>();
+    Employee employee = new Employee();
+    protected override void OnInitialized()
+    {
+        employeesList = employeeRepo.GetEmployees();
+    }
+    async Task<IEnumerable<Employee>> SearchData(string data)
+    {
+        var dataget = await employeeRepo.SearchListEmployee(data);
+        return dataget;
+    }
+}
+
+
