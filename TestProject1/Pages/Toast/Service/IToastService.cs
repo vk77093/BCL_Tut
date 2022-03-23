@@ -2,6 +2,7 @@
 {
     public interface IToastService
     {
+        event Action<ToastLevel, string, string> OnShow;
         void ShowError(string message, string heading = "");
         void ShowInfo(string message, string heading = "");
         void ShowSuccess(string message, string heading = "");

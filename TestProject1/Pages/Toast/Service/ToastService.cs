@@ -4,7 +4,7 @@
     {
         public ToastService() { }
 
-        event Action<ToastLevel, string, string> OnShow;
+       public event Action<ToastLevel, string, string> OnShow;
         public void ShowInfo(string message, string heading = "")
         {
             ShowToast(ToastLevel.Info, message, heading);
