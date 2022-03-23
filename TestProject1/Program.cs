@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using TestProject1.Data;
 using TestProject1.Pages.AutoComplete.Repos;
+using TestProject1.Pages.Toast.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,9 @@ builder.Services.AddSingleton<WeatherForecastService>();
 //AutoComplete
 builder.Services.AddScoped<IEmployeeRepo, EmployeeRepo>();
 builder.Services.AddSingleton<HttpClient>();
+
+//Toast Service
+builder.Services.AddScoped<IToastService, ToastService>();
 
 var app = builder.Build();
 

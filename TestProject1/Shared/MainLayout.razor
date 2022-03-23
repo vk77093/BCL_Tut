@@ -1,19 +1,30 @@
 ﻿@inherits LayoutComponentBase
+@using TestProject1.Pages.Toast.Comps
+@using TestProject1.Pages.Toast.config
 
 <PageTitle>TestProject1</PageTitle>
-
+  
 <div class="page">
+    
     <div class="sidebar">
         <NavMenu />
     </div>
+   
 
+    
     <main>
+        
         <div class="top-row px-4">
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
         </div>
-
+        
         <article class="content px-4">
             @Body
+           
         </article>
+       
     </main>
+     <BlazoredToastsMain Position="ToastPosition.BottomLeft" TimeOut="10"
+    SuccessClass="success-toast-override" SuccessClassIcon="fa fa-thumbs-up" 
+    ErrorClassIcon="fa fa-bug"/>
 </div>

@@ -1,0 +1,98 @@
+﻿@using TestProject1.Pages.Toast
+@using TestProject1.Pages.Toast.config
+@using TestProject1.Pages.Toast.Service
+@using System.Timers
+@if (ToastList.Any())
+{
+    <div class="blazored-toast-container @PositionClass">
+        <CascadingValue Value=this>
+            @foreach (var toast in ToastList.OrderBy(x => x.TimeStamps))
+            {
+                <BlazoredToastSecondShow ToastSettings="toast.ToastSetting" ToastId="toast.guid" />
+            }
+        </CascadingValue>
+    </div>
+}
+
+@code {
+    [Inject]
+    IToastService toastService{ get; set; }
+    [Parameter]
+    public string InfoClass { get; set; }
+    [Parameter]
+    public string InfoClassIcon { get; set; }
+    [Parameter]
+    public string SuccessClass { get; set; }
+    [Parameter]
+    public string SuccessClassIcon { get; set; }
+    [Parameter]
+    public string WarningClass { get; set; }
+    [Parameter]
+    public string WarningClassIcon { get; set; }
+    [Parameter]
+    public string ErrorClass { get; set; }
+    [Parameter]
+    public string ErrorClassIcon { get; set; }
+    [Parameter]
+    public ToastPosition Position { get; set; } = ToastPosition.BottomRight;
+    [Parameter]
+    public int TimeOut { get; set; } = 5;
+    [Parameter]
+    public string PositionClass { get; set; } = string.Empty;
+    public List<ToastInstance> ToastList { get; set; } = new List<ToastInstance>();
+    protected override void OnInitialized()
+    {
+        toastService.OnShow += ShowToast;
+        PositionClass = $"position-{Position.ToString().ToLower()}";
+    }
+    public void RemoveToast(Guid ToastId)
+    {
+        InvokeAsync(() =>
+        {
+            var toastInstance = ToastList.SingleOrDefault(x => x.guid == ToastId);
+            ToastList.Remove(toastInstance);
+            StateHasChanged();
+        });
+    }
+    ToastSetting BuildToastSetting(ToastLevel level, string message,string heading)
+    {
+        switch (level)
+        {
+            case ToastLevel.Info:
+                return new ToastSetting(string.IsNullOrWhiteSpace(heading) ? "info" : heading, message, "blazored-toast-info", InfoClass, InfoClassIcon);
+            case ToastLevel.Success:
+                return new ToastSetting(string.IsNullOrWhiteSpace(heading) ? "success" : heading, message, "blazored-toast-success", SuccessClass, SuccessClassIcon);
+            case ToastLevel.Warning:
+                return new ToastSetting(string.IsNullOrWhiteSpace(heading) ? "warning" : heading, message, "blazored-toast-warning", WarningClass, WarningClassIcon);
+            case ToastLevel.Error:
+                return new ToastSetting(string.IsNullOrWhiteSpace(heading) ? "error" : heading, message, "blazored-toast-error", ErrorClass, ErrorClassIcon);
+
+        }
+        throw new InvalidOperationException();
+    }
+
+    public void ShowToast(ToastLevel level,string message, string heading)
+    {
+        InvokeAsync(() =>
+        {
+            var settings = BuildToastSetting(level, message, heading);
+            var tosat = new ToastInstance
+            {
+                guid = Guid.NewGuid(),
+                TimeStamps = DateTime.Now,
+                ToastSetting = settings,
+
+            };
+            ToastList.Add(tosat);
+            var timeout = TimeOut * 1000;
+            var toastTimer = new Timer(timeout);
+            toastTimer.Elapsed += (sender, args) =>
+            {
+                RemoveToast(tosat.guid);
+            };
+            toastTimer.AutoReset = false;
+            toastTimer.Start();
+            StateHasChanged();
+        });
+    }
+}

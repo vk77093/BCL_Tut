@@ -1,0 +1,21 @@
+﻿@using TestProject1.Pages.Toast
+@using TestProject1.Pages.Toast.config
+@using TestProject1.Pages.Toast.Service
+
+@page "/showtoastdemo"
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <button class="btn btn-info" @onclick="@(()=>toastService.ShowInfo("I Am Info Message"))">Info Toast</button>
+            <button class="btn btn-success" @onclick="@(()=>toastService.ShowSuccess("I am Success Message"))">Success Toast</button>
+            <button class="btn btn-warning" @onclick="@(()=>toastService.ShowWarning("I am Warning Message"))">Warning Toast</button>
+            <button class="btn btn-danger" @onclick="@(()=>toastService.ShowError("I am Error Message"))">Error Toast</button>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Inject]
+    IToastService toastService { get; set; }
+}
