@@ -1,0 +1,36 @@
+﻿@using System.Net.Mail
+@page "/sendmail"
+
+<button class="btn btn-primary btn-lg" @onclick="SendMailTest">Send Mail</button>
+@if (!string.IsNullOrEmpty(message))
+{
+    <span class="text-danger font-weight-bold">@message</span>
+}
+@code {
+    string message = string.Empty;
+    void SendMailTest()
+    {
+        try
+        {
+            using(MailMessage maild=new MailMessage())
+            {
+                maild.From=new MailAddress("rightospl@gmail.com");
+                maild.To.Add("vk77093@gmail.com");
+                maild.Subject = "The Mail Subject Test";
+                maild.Body = "<h1>Test mail from the blazor Test </h1>";
+                maild.IsBodyHtml = true;
+                using(SmtpClient smtp=new SmtpClient("smtp.gmail.com", 587))
+                {
+                    smtp.Credentials = new System.Net.NetworkCredential("rightospl@gmail.com", "rightopen@123");
+                    smtp.EnableSsl = true;
+                    smtp.Send(maild);
+                    message = "Mail Sent Successfully";
+                }
+            }
+
+        }catch(Exception ex)
+        {
+            message = ex.Message;
+        }
+    }
+}
