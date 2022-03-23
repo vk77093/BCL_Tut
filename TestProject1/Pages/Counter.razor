@@ -1,18 +1,26 @@
-﻿@page "/counter"
+﻿@page "/employeeApi"
+@inject HttpClient http;
 
 <PageTitle>Counter</PageTitle>
 
-<h1>Counter</h1>
-
-<p role="status">Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+@if(emps != null)
+{
+    <h4>Some Data Found</h4>
+}
+else
+{
+    <h4 class="text-center">No Employee Found</h4>
+}
 
 @code {
-    private int currentCount = 0;
-
-    private void IncrementCount()
+    List<EmployeeFetch> emps = new List<EmployeeFetch>();
+   
+    protected override async void OnInitialized()
     {
-        currentCount++;
+       await GetEmpl();
+    } 
+    async Task GetEmpl()
+    {
+      emps=   await http.GetFromJsonAsync<List<EmployeeFetch>>("http://dummy.restapiexample.com/api/v1/employees");
     }
 }
