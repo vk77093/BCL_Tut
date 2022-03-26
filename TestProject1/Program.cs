@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using TestProject1.Data;
 using TestProject1.Pages.AutoComplete.Repos;
 using TestProject1.Pages.Toast.Service;
+using TestProject1.Pages.VirualizeCompTest;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,9 @@ builder.Services.AddSingleton<HttpClient>();
 //Toast Service
 builder.Services.AddScoped<IToastService, ToastService>();
 
+
+//virtual comp test
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

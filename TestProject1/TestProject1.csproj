@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Blazored.Typeahead" Version="4.6.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+    <PackageReference Include="QRCoderNetCore" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

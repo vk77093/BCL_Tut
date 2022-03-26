@@ -1,0 +1,39 @@
+﻿@using QRCoder;
+@using System.IO;
+@using System.Drawing;
+@using System.Drawing.Imaging;
+
+@page "/qrcode"
+<h3>QrcodePage</h3>
+<input type="text" @bind="InputText" placeholder="ENter Text Here" />
+<br/>
+<br/>
+<button class="btn btn-primary" @onclick="GenerateQRCode">Generate QR Code</button>
+<br/>
+<br/>
+<img src="@QRCodeStr" style="width:200px;height:200px;"/>
+
+@code {
+    string InputText { get; set; }
+    string QRCodeStr { get; set; }
+
+    void GenerateQRCode()
+    {
+        QRCodeStr = "";
+        if (!string.IsNullOrWhiteSpace(InputText))
+        {
+            using(MemoryStream ms=new MemoryStream())
+            {
+                QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
+                QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode(InputText, QRCodeGenerator.ECCLevel.Q);
+                QRCode qRCode = new QRCode(qRCodeData);
+                using(Bitmap bitmap = qRCode.GetGraphic(20,Color.Black,Color.NavajoWhite,(Bitmap)Bitmap.FromFile("C:\\Users\\VIJAY\\Downloads\\logoQR.png")))
+                {
+                    bitmap.Save(ms, ImageFormat.Png);
+                    QRCodeStr = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
+                }
+            } 
+        }
+        
+    }
+}
